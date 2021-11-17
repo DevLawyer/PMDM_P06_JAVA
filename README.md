@@ -7,14 +7,39 @@ Relaciones.
 A -> B -> C <- D
 
 A	   B	      C		D
-Abogado -> Cliente -> Asunto <- Contrario.
+Abogado -> Cliente -> Asunto <- Órgano.
 
 A Socio
-	Usuario
+	PK Usuario
 	Contraseña
 	NIF
 	Foto
 	Fecha
+
+B Cliente
+	PK Código Cliente
+	Nombre
+	Apellido
+	NIF
+	Dirección
+	Teléfono
+	FK - Usuario
+
+C Asuntos
+	PK Código Asunto
+	Descripción
+	Fecha Alta
+	Fecha Final
+	Número Horas
+	Precio Hora
+	FK - Código Cliente
+	FK - Código Órgano
+
+D Órgano
+	PK Código Órgano
+	Nombre
+	Dirección
+	Teléfono
 
 VISTA
 JFrame.
