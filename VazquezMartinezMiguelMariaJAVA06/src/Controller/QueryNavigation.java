@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,7 @@ public class QueryNavigation {
     
     private static Statement stmt = null;
     private static ResultSet rset = null;
+    private static ArrayList list;
         
     public static void startNavigation(Connection conn){
         /**
@@ -96,14 +98,70 @@ public class QueryNavigation {
         }
     }
     
-    public static ResultSet getCurrent(){
+    /*
+    public static Object getCurrent(){
         /**
-         * This method return the current resultset in the cursor.
-         * 
-         * @return rset.
-         */
-        return rset;
+         * This method return the current resultset packed as
+         * object.
+         
+        
+        Employee auxEmp = null;
+        
+        if(rset != null){
+            try{
+                auxEmp = new Employee( rset.getString(1),
+                                    rset.getString(2),
+                                    rset.getString(3),
+                                    rset.getString(4),
+                                    rset.getString(5),
+                                    rset.getString(6),
+                                    rset.getString(7));
+            }catch(SQLException e){
+                System.out.println("Error al conectar con la BBDD.");
+            }  
+        }  
+        
+        
+    
+        return auxEmp;            
     }
+    */
+    public static ArrayList getDBData(Connection conn, String query){
+        /**
+         * This method receive as a parameter a query for the data base to create
+         * an arraylist with the rows and return it.
+         * 
+         * @param query is the String which send as a query to the data base.
+         * @return list with the content of the result of the query.
+         */
+        try{
+            list = new ArrayList();
+            stmt = conn.createStatement();
+
+            rset = stmt.executeQuery(query);
+            
+            while(rset.next()){ 
+                /*
+                Employee auxEmp = new Employee( rset.getString(1),
+                                                rset.getString(2),
+                                                rset.getString(3),
+                                                rset.getString(4),
+                                                rset.getString(5),
+                                                rset.getString(6),
+                                                rset.getString(7));
+                
+                list.add(auxEmp);
+                */
+            }
+            
+        }catch(SQLException e){
+            System.out.println("Error al conectar con la BBDD.");
+        }  
+
+        close();
+        return list;
+    }
+    
     
     public static boolean isFirst(){
         /**

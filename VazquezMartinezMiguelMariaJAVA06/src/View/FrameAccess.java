@@ -1,21 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package View;
 
-/**
- *
- * @author migva
- */
+import Controller.AccessDB;
+import Controller.QueryUserAccess;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+
 public class FrameAccess extends javax.swing.JFrame {
 
     /**
      * Creates new form FrameAccess
      */
     public FrameAccess() {
+        AccessDB.closeConnection();
+        try {
+            conn = AccessDB.getConnection();
+            System.out.println("conectado");
+        } catch (SQLException ex) {
+            Logger.getLogger(FrameAccess.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
+        pack();
     }
 
     /**
@@ -27,96 +43,139 @@ public class FrameAccess extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        labelUser = new javax.swing.JLabel();
-        labelPassword = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        labelAccessMsg = new javax.swing.JLabel();
         labelHeader = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        textFieldUser = new javax.swing.JTextField();
         textFieldPassword = new javax.swing.JPasswordField();
+        textFieldUser = new javax.swing.JTextField();
+        labelUser = new javax.swing.JLabel();
+        labelPassword = new javax.swing.JLabel();
         buttonAcept = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("INICIAR SESIÓN");
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(400, 200));
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Images/adaIcon.png")).getImage());
         setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/adaLogo.png"))); // NOI18N
+
+        labelAccessMsg.setBackground(new java.awt.Color(255, 255, 255));
+        labelAccessMsg.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelAccessMsg.setForeground(new java.awt.Color(255, 51, 51));
+        labelAccessMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        labelHeader.setBackground(new java.awt.Color(255, 255, 255));
+        labelHeader.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelHeader.setForeground(new java.awt.Color(0, 50, 71));
+        labelHeader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelHeader.setText("INICIO DE SESIÓN");
+
+        jSeparator1.setForeground(new java.awt.Color(0, 50, 71));
+
+        textFieldPassword.setBackground(new java.awt.Color(204, 204, 255));
+        textFieldPassword.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        textFieldPassword.setForeground(new java.awt.Color(0, 50, 71));
+
+        textFieldUser.setBackground(new java.awt.Color(204, 204, 255));
+        textFieldUser.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        textFieldUser.setForeground(new java.awt.Color(0, 50, 71));
 
         labelUser.setBackground(new java.awt.Color(255, 255, 255));
         labelUser.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelUser.setForeground(new java.awt.Color(0, 0, 0));
+        labelUser.setForeground(new java.awt.Color(0, 50, 71));
         labelUser.setText("USUARIO:");
 
         labelPassword.setBackground(new java.awt.Color(255, 255, 255));
         labelPassword.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelPassword.setForeground(new java.awt.Color(0, 0, 0));
+        labelPassword.setForeground(new java.awt.Color(0, 50, 71));
         labelPassword.setText("CONTRASEÑA:");
 
-        labelHeader.setBackground(new java.awt.Color(255, 255, 255));
-        labelHeader.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelHeader.setForeground(new java.awt.Color(0, 0, 0));
-        labelHeader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelHeader.setText("INICIO DE SESIÓN");
-
-        textFieldUser.setBackground(new java.awt.Color(204, 204, 204));
-        textFieldUser.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        textFieldUser.setForeground(new java.awt.Color(0, 0, 0));
-
-        textFieldPassword.setBackground(new java.awt.Color(204, 204, 204));
-        textFieldPassword.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        textFieldPassword.setForeground(new java.awt.Color(0, 0, 0));
-
         buttonAcept.setBackground(new java.awt.Color(204, 204, 204));
-        buttonAcept.setForeground(new java.awt.Color(0, 0, 0));
+        buttonAcept.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        buttonAcept.setForeground(new java.awt.Color(0, 50, 71));
         buttonAcept.setText("Aceptar");
         buttonAcept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAceptActionPerformed(evt);
             }
         });
+        buttonAcept.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buttonAceptKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(100, 100, 100)
+                            .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelAccessMsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(288, 288, 288)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(199, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(208, 208, 208)
+                    .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(6, 6, 6)
+                    .addComponent(labelAccessMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(labelHeader, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(30, 30, 30)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(150, 150, 150)
-                        .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(9, Short.MAX_VALUE)
-                .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -124,11 +183,14 @@ public class FrameAccess extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        FrameApp app = new FrameApp();
-        app.setVisible(true);
-        this.setVisible(false);
-        
+        appAccess();
     }//GEN-LAST:event_buttonAceptActionPerformed
+
+    private void buttonAceptKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buttonAceptKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            appAccess();
+        }
+    }//GEN-LAST:event_buttonAceptKeyPressed
 
     /**
      * @param args the command line arguments
@@ -139,22 +201,9 @@ public class FrameAccess extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrameApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrameApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrameApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrameApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+        try{
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch (Exception E){}
         //</editor-fold>
 
         /* Create and display the form */
@@ -164,10 +213,34 @@ public class FrameAccess extends javax.swing.JFrame {
             }
         });
     }    
-
+    
+    private void appAccess(){
+        if("".equals(textFieldUser.getText()) || "".equals(String.valueOf(textFieldPassword.getPassword()))){
+            labelAccessMsg.setText("Debe indicar Usuario y Contraseña.");
+            textFieldPassword.setText("");
+        } else if(QueryUserAccess.getAccess(conn, textFieldUser.getText(), String.valueOf(textFieldPassword.getPassword()))){
+            FrameApp app = new FrameApp();
+            app.setVisible(true);
+            this.setVisible(false); 
+        } else {
+            labelAccessMsg.setText("Usuario o Contraseña incorrectos.");
+            textFieldPassword.setText("");
+        }
+        
+    }
+    
+    public void setFrameAccessVisible(boolean status){
+        this.setVisible(status);
+    }
+    
+    private static Connection conn;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAcept;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel labelAccessMsg;
     private javax.swing.JLabel labelHeader;
     private javax.swing.JLabel labelPassword;
     private javax.swing.JLabel labelUser;

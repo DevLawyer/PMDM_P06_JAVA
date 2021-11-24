@@ -9,7 +9,7 @@ A -> B -> C <- D
 A	   B	      C		D
 Abogado -> Cliente -> Asunto <- Órgano.
 
-A Socio
+A Abogado
 	PK Usuario
 	Contraseña
 	NIF
