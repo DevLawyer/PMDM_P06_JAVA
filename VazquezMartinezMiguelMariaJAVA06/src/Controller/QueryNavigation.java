@@ -7,6 +7,7 @@
 
 package Controller;
 
+import Model.Client;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,13 +39,14 @@ public class QueryNavigation {
         }
     }
     
-    public static void setQuery(String query){
+    public static void setQuery(int cod_lawyer){
         /**
          * This method send a query receive as a parameter.
          * 
          * @param query which send in other part of the application.
          */
         try {
+            String query = "SELECT * FROM client WHERE cod_lawyer = "+cod_lawyer+ "ORDER BY cod_client";
             rset = stmt.executeQuery(query);
             if(rset.next()){
                 rset.beforeFirst();
@@ -98,18 +100,16 @@ public class QueryNavigation {
         }
     }
     
-    /*
-    public static Object getCurrent(){
+    
+    public static Client getCurrent(){
         /**
          * This method return the current resultset packed as
          * object.
-         
-        
-        Employee auxEmp = null;
-        
+         */
+        Client client = new Client();
         if(rset != null){
             try{
-                auxEmp = new Employee( rset.getString(1),
+                client = new Client( rset.getInt(1),
                                     rset.getString(2),
                                     rset.getString(3),
                                     rset.getString(4),
@@ -117,51 +117,12 @@ public class QueryNavigation {
                                     rset.getString(6),
                                     rset.getString(7));
             }catch(SQLException e){
-                System.out.println("Error al conectar con la BBDD.");
+                System.out.println(e.getMessage());
             }  
         }  
         
-        
-    
-        return auxEmp;            
-    }
-    */
-    public static ArrayList getDBData(Connection conn, String query){
-        /**
-         * This method receive as a parameter a query for the data base to create
-         * an arraylist with the rows and return it.
-         * 
-         * @param query is the String which send as a query to the data base.
-         * @return list with the content of the result of the query.
-         */
-        try{
-            list = new ArrayList();
-            stmt = conn.createStatement();
-
-            rset = stmt.executeQuery(query);
-            
-            while(rset.next()){ 
-                /*
-                Employee auxEmp = new Employee( rset.getString(1),
-                                                rset.getString(2),
-                                                rset.getString(3),
-                                                rset.getString(4),
-                                                rset.getString(5),
-                                                rset.getString(6),
-                                                rset.getString(7));
-                
-                list.add(auxEmp);
-                */
-            }
-            
-        }catch(SQLException e){
-            System.out.println("Error al conectar con la BBDD.");
-        }  
-
-        close();
-        return list;
-    }
-    
+        return client;            
+    } 
     
     public static boolean isFirst(){
         /**

@@ -9,22 +9,25 @@ package Controller;
 
 import java.sql.*;
 
+
 public class AccessDB {
     
     private static Connection conn;
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
         /**
          * This method create the connection with the data base passed as parameter
          * the url of local data base host, the user and the password.
          */
-        String url = "jdbc:derby://localhost:1527/LawOffice";
-        Connection conn = DriverManager.getConnection(url,"superAdmin","superAdmin");
         try {
+            String url = "jdbc:derby://localhost:1527/LawOffice";
             Class.forName("org.apache.derby.jdbc.ClientDriver");	
+            conn = DriverManager.getConnection(url,"superAdmin","superAdmin");
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
-        } 
+        } catch (SQLException ex) { 
+            System.out.println("Error al conectar con la base de datos.");
+        }
         return conn;
     } 
     

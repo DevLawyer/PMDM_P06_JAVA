@@ -1,7 +1,8 @@
 CREATE TABLE Lawyer(
+    cod_lawyer      INTEGER,
     lawyer_nif      VARCHAR(10),
-    lawyer_name     VARCHAR(15),
-    lawyer_surname  VARCHAR(15),
+    lawyer_name     VARCHAR(30),
+    lawyer_surname  VARCHAR(30),
     phone_ext       NUMERIC(4),
     user_name       VARCHAR(15) NOT NULL,
     user_password   VARCHAR(15) NOT NULL,
@@ -10,33 +11,35 @@ CREATE TABLE Lawyer(
     hours_fee       NUMERIC,
 
     CONSTRAINT pk_lawyer
-        PRIMARY KEY (lawyer_nif),
+        PRIMARY KEY (cod_lawyer),
+    CONSTRAINT unique_nif
+        UNIQUE (lawyer_nif),
     CONSTRAINT unique_user 
         UNIQUE (user_name)
 );
 
-INSERT INTO lawyer VALUES ('55334689X','Miguel María','Vázquez',4011,'migvazmar','migvazmar1',null,CURRENT_DATE,150);
+INSERT INTO lawyer VALUES (0,'55334689X','Miguel María','Vázquez',4011,'migvazmar','migvazmar1',null,CURRENT_DATE,150);
 
 CREATE TABLE Client(
     cod_client      INTEGER,
-    client_name     VARCHAR(15) NOT NULL,
-    client_surname  VARCHAR(15),
+    client_name     VARCHAR(30) NOT NULL,
+    client_surname  VARCHAR(30),
     client_nif      VARCHAR(10),
     client_address  VARCHAR(30),
     telephone_num   VARCHAR(15) NOT NULL,
-    lawyer_nif      VARCHAR(10) NOT NULL,
+    cod_lawyer      INTEGER NOT NULL,
     
     CONSTRAINT pk_client
         PRIMARY KEY (cod_client),
     CONSTRAINT fk_lawyer
-	    FOREIGN KEY (lawyer_nif)
-	    REFERENCES Lawyer(lawyer_nif)
+	    FOREIGN KEY (cod_lawyer)
+	    REFERENCES Lawyer(cod_lawyer)
 
 );
 
 CREATE TABLE Entity(
     cod_entity      INTEGER,
-    entity_name     VARCHAR(15),
+    entity_name     VARCHAR(40),
     entity_address  VARCHAR(30),
     telephone_num   VARCHAR(15),
 

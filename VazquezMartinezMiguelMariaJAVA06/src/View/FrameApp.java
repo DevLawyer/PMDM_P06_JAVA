@@ -5,12 +5,13 @@
  */
 package View;
 
+import Controller.DateParser;
+import Model.Lawyer;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import java.sql.Connection;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -23,11 +24,17 @@ public class FrameApp extends javax.swing.JFrame {
      */
     public FrameApp() {
         initComponents();
+        conn = FrameAccess.getConnection();
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch (Exception E){}
         this.setExtendedState(MAXIMIZED_BOTH);
 
+        String nameUser = user.getLawyerName()+" "+user.getLawyerSurname();
+        labelUserNameSurname.setText(nameUser);
+        labelSYSDate.setText("Fecha actual: "+DateParser.parseDate(new GregorianCalendar()));
+        
+ 
     }
     
     public void changePanel(JPanel showPanel){
@@ -50,15 +57,15 @@ public class FrameApp extends javax.swing.JFrame {
 
         panelLeftBar = new javax.swing.JPanel();
         buttonProfile = new javax.swing.JButton();
-        buttonIssues = new javax.swing.JButton();
+        buttonClients = new javax.swing.JButton();
         buttonNewIssue = new javax.swing.JButton();
         panelLogo = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         buttonAboutApp = new javax.swing.JButton();
         panelTopInfo = new javax.swing.JPanel();
-        labelSYSDate1 = new javax.swing.JLabel();
-        labelSYSDate2 = new javax.swing.JLabel();
-        labelSYSDate3 = new javax.swing.JLabel();
+        labelUserData = new javax.swing.JLabel();
+        labelUserNameSurname = new javax.swing.JLabel();
+        labelSYSDate = new javax.swing.JLabel();
         buttonOut = new javax.swing.JButton();
         panelWork = new javax.swing.JPanel();
 
@@ -75,19 +82,21 @@ public class FrameApp extends javax.swing.JFrame {
         buttonProfile.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         buttonProfile.setForeground(new java.awt.Color(0, 50, 71));
         buttonProfile.setText("PERFIL");
+        buttonProfile.setBorder(null);
         buttonProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonProfileActionPerformed(evt);
             }
         });
 
-        buttonIssues.setBackground(new java.awt.Color(255, 255, 255));
-        buttonIssues.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        buttonIssues.setForeground(new java.awt.Color(0, 50, 71));
-        buttonIssues.setText("ASUNTOS");
-        buttonIssues.addActionListener(new java.awt.event.ActionListener() {
+        buttonClients.setBackground(new java.awt.Color(255, 255, 255));
+        buttonClients.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        buttonClients.setForeground(new java.awt.Color(0, 50, 71));
+        buttonClients.setText("CLIENTES");
+        buttonClients.setBorder(null);
+        buttonClients.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonIssuesActionPerformed(evt);
+                buttonClientsActionPerformed(evt);
             }
         });
 
@@ -95,6 +104,7 @@ public class FrameApp extends javax.swing.JFrame {
         buttonNewIssue.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         buttonNewIssue.setForeground(new java.awt.Color(0, 50, 71));
         buttonNewIssue.setText("ALTA ASUNTO");
+        buttonNewIssue.setBorder(null);
         buttonNewIssue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonNewIssueActionPerformed(evt);
@@ -124,6 +134,7 @@ public class FrameApp extends javax.swing.JFrame {
         buttonAboutApp.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         buttonAboutApp.setForeground(new java.awt.Color(0, 50, 71));
         buttonAboutApp.setText("INFORMACIÓN");
+        buttonAboutApp.setBorder(null);
         buttonAboutApp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAboutAppActionPerformed(evt);
@@ -140,7 +151,7 @@ public class FrameApp extends javax.swing.JFrame {
                     .addComponent(buttonAboutApp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonProfile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonIssues, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonClients, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonNewIssue, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(520, 520, 520))
         );
@@ -152,7 +163,7 @@ public class FrameApp extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(buttonProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonIssues, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonClients, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonNewIssue, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -162,27 +173,28 @@ public class FrameApp extends javax.swing.JFrame {
 
         panelTopInfo.setBackground(new java.awt.Color(0, 50, 71));
 
-        labelSYSDate1.setBackground(new java.awt.Color(0, 50, 71));
-        labelSYSDate1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelSYSDate1.setForeground(new java.awt.Color(255, 255, 255));
-        labelSYSDate1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelSYSDate1.setText("USUARIO CONECTADO:");
+        labelUserData.setBackground(new java.awt.Color(0, 50, 71));
+        labelUserData.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelUserData.setForeground(new java.awt.Color(255, 255, 255));
+        labelUserData.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelUserData.setText("USUARIO CONECTADO:");
 
-        labelSYSDate2.setBackground(new java.awt.Color(0, 50, 71));
-        labelSYSDate2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelSYSDate2.setForeground(new java.awt.Color(255, 255, 255));
-        labelSYSDate2.setText("Nombre, Apellido Usuario");
+        labelUserNameSurname.setBackground(new java.awt.Color(0, 50, 71));
+        labelUserNameSurname.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelUserNameSurname.setForeground(new java.awt.Color(255, 255, 255));
+        labelUserNameSurname.setText("Nombre, Apellido Usuario");
 
-        labelSYSDate3.setBackground(new java.awt.Color(0, 50, 71));
-        labelSYSDate3.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        labelSYSDate3.setForeground(new java.awt.Color(255, 255, 255));
-        labelSYSDate3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelSYSDate3.setText("FECHA DEL SISTEMA");
+        labelSYSDate.setBackground(new java.awt.Color(0, 50, 71));
+        labelSYSDate.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelSYSDate.setForeground(new java.awt.Color(255, 255, 255));
+        labelSYSDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelSYSDate.setText("FECHA DEL SISTEMA");
 
         buttonOut.setBackground(new java.awt.Color(255, 255, 255));
         buttonOut.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         buttonOut.setForeground(new java.awt.Color(0, 50, 71));
         buttonOut.setText("SALIR");
+        buttonOut.setBorder(null);
         buttonOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonOutActionPerformed(evt);
@@ -195,13 +207,13 @@ public class FrameApp extends javax.swing.JFrame {
             panelTopInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(labelSYSDate3, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelSYSDate, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(labelSYSDate1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelSYSDate2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonOut)
+                .addComponent(labelUserNameSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addComponent(buttonOut, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelTopInfoLayout.setVerticalGroup(
@@ -209,9 +221,9 @@ public class FrameApp extends javax.swing.JFrame {
             .addGroup(panelTopInfoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTopInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelSYSDate1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelSYSDate2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelSYSDate3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelUserData, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelUserNameSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelSYSDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonOut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -256,16 +268,18 @@ public class FrameApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void buttonProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProfileActionPerformed
-        panelUser = new PanelUserProperties();
+        panelUser = new PanelUserProperties(conn, user);
         changePanel(panelUser);
     }//GEN-LAST:event_buttonProfileActionPerformed
 
-    private void buttonIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIssuesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonIssuesActionPerformed
+    private void buttonClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClientsActionPerformed
+        panelShow = new PanelShow(conn);
+        changePanel(panelShow);
+    }//GEN-LAST:event_buttonClientsActionPerformed
 
     private void buttonNewIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewIssueActionPerformed
-        // TODO add your handling code here:
+        panelRegister = new PanelRegister(conn, user);
+        changePanel(panelRegister);
     }//GEN-LAST:event_buttonNewIssueActionPerformed
 
     private void buttonOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOutActionPerformed
@@ -275,22 +289,27 @@ public class FrameApp extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonOutActionPerformed
 
     private void buttonAboutAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAboutAppActionPerformed
-        // TODO add your handling code here:
+        changePanel(panelAbout);
     }//GEN-LAST:event_buttonAboutAppActionPerformed
 
 
     private PanelUserProperties panelUser;
+    private PanelShow panelShow;
+    private PanelRegister panelRegister;
+    private PanelAbout panelAbout = new PanelAbout();
+    private Lawyer user = FrameAccess.getUser();
+    private static Connection conn;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAboutApp;
-    private javax.swing.JButton buttonIssues;
+    private javax.swing.JButton buttonClients;
     private javax.swing.JButton buttonNewIssue;
     private javax.swing.JButton buttonOut;
     private javax.swing.JButton buttonProfile;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel labelSYSDate1;
-    private javax.swing.JLabel labelSYSDate2;
-    private javax.swing.JLabel labelSYSDate3;
+    private javax.swing.JLabel labelSYSDate;
+    private javax.swing.JLabel labelUserData;
+    private javax.swing.JLabel labelUserNameSurname;
     private javax.swing.JPanel panelLeftBar;
     private javax.swing.JPanel panelLogo;
     private javax.swing.JPanel panelTopInfo;

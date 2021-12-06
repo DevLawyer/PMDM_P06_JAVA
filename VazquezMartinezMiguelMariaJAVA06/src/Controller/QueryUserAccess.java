@@ -7,14 +7,13 @@
 
 package Controller;
 
+import Model.Lawyer;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class QueryUserAccess {
-    private static PreparedStatement pstmt;
-    private static ResultSet rset;
     
     public static boolean getAccess(Connection conn, String user, String password){
         //By default the access is false to prevent an unauthorised access.
@@ -29,6 +28,15 @@ public class QueryUserAccess {
             
             //At first, this while loop count the number of rows that contains the previous resultSet.
             while(rset.next()){
+                userLawyer = new Lawyer(rset.getInt(1),
+                                    rset.getString(2),
+                                    rset.getString(3),
+                                    rset.getString(4),
+                                    rset.getInt(5),
+                                    rset.getString(6),
+                                    rset.getString(8),
+                                    rset.getString(9),
+                                    rset.getInt(10));
                 rows++;
             }
             
@@ -45,4 +53,12 @@ public class QueryUserAccess {
         
         return access;
     }
+    
+    public static Lawyer getUser(){
+        return userLawyer;
+    }
+    
+    private static PreparedStatement pstmt;
+    private static ResultSet rset;
+    private static Lawyer userLawyer;
 }

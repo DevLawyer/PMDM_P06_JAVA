@@ -78,7 +78,7 @@
                       <Component id="buttonAboutApp" max="32767" attributes="0"/>
                       <Component id="panelLogo" alignment="1" max="32767" attributes="0"/>
                       <Component id="buttonProfile" alignment="0" max="32767" attributes="0"/>
-                      <Component id="buttonIssues" alignment="0" max="32767" attributes="0"/>
+                      <Component id="buttonClients" alignment="0" max="32767" attributes="0"/>
                       <Component id="buttonNewIssue" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="520" max="-2" attributes="0"/>
@@ -93,7 +93,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="buttonProfile" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="buttonIssues" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="buttonClients" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonNewIssue" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -116,12 +116,15 @@
               <Color blue="47" green="32" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="PERFIL"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonProfileActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="buttonIssues">
+        <Component class="javax.swing.JButton" name="buttonClients">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -132,10 +135,13 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="47" green="32" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="ASUNTOS"/>
+            <Property name="text" type="java.lang.String" value="CLIENTES"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonIssuesActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonClientsActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="buttonNewIssue">
@@ -150,6 +156,9 @@
               <Color blue="47" green="32" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="ALTA ASUNTO"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonNewIssueActionPerformed"/>
@@ -202,6 +211,9 @@
               <Color blue="47" green="32" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="INFORMACI&#xd3;N"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAboutAppActionPerformed"/>
@@ -221,13 +233,13 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="labelSYSDate3" min="-2" pref="247" max="-2" attributes="0"/>
+                  <Component id="labelSYSDate" min="-2" pref="247" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="labelSYSDate1" min="-2" pref="180" max="-2" attributes="0"/>
+                  <Component id="labelUserData" min="-2" pref="180" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="labelSYSDate2" min="-2" pref="260" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="buttonOut" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelUserNameSurname" min="-2" pref="260" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="32767" attributes="0"/>
+                  <Component id="buttonOut" min="-2" pref="67" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -237,9 +249,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="labelSYSDate1" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="labelSYSDate2" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="labelSYSDate3" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="labelUserData" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="labelUserNameSurname" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="labelSYSDate" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="buttonOut" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -248,7 +260,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="labelSYSDate1">
+        <Component class="javax.swing.JLabel" name="labelUserData">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="47" green="32" red="0" type="rgb"/>
@@ -263,7 +275,7 @@
             <Property name="text" type="java.lang.String" value="USUARIO CONECTADO:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="labelSYSDate2">
+        <Component class="javax.swing.JLabel" name="labelUserNameSurname">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="47" green="32" red="0" type="rgb"/>
@@ -277,7 +289,7 @@
             <Property name="text" type="java.lang.String" value="Nombre, Apellido Usuario"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="labelSYSDate3">
+        <Component class="javax.swing.JLabel" name="labelSYSDate">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="47" green="32" red="0" type="rgb"/>
@@ -304,6 +316,9 @@
               <Color blue="47" green="32" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="SALIR"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOutActionPerformed"/>

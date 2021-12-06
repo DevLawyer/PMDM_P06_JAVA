@@ -5,6 +5,16 @@
  */
 package View;
 
+import Controller.QueryList;
+import Controller.QueryNavigation;
+import Model.Client;
+import Model.Issue;
+import Model.Lawyer;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author migva
@@ -14,8 +24,14 @@ public class PanelShow extends javax.swing.JPanel {
     /**
      * Creates new form PanelShow
      */
-    public PanelShow() {
+    public PanelShow(Connection conn) {
         initComponents();
+        this.conn = conn;
+        this.model = new DefaultListModel();
+        QueryNavigation.startNavigation(this.conn);
+        resetNavigation();
+        showClient();
+        resetMainJList();
     }
 
     /**
@@ -27,19 +43,430 @@ public class PanelShow extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        labelClientHeader = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        labelClientName = new javax.swing.JLabel();
+        labelClientSurname = new javax.swing.JLabel();
+        labelClientNIF = new javax.swing.JLabel();
+        labelClientAddress = new javax.swing.JLabel();
+        labelClientPhone = new javax.swing.JLabel();
+        labelClientCode = new javax.swing.JLabel();
+        jScrollPane = new javax.swing.JScrollPane();
+        listIssues = new javax.swing.JList<>();
+        labelIssuesHeader = new javax.swing.JLabel();
+        labelClientTextName = new javax.swing.JLabel();
+        labelClientTextSurname = new javax.swing.JLabel();
+        labelClientTextNIF = new javax.swing.JLabel();
+        labelClientTextAddress = new javax.swing.JLabel();
+        labelClientTextPhone = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        labelIssuesDescription = new javax.swing.JLabel();
+        labelIssuesEntryDate = new javax.swing.JLabel();
+        labelIssuesEndDate = new javax.swing.JLabel();
+        labelIssuesNumHours = new javax.swing.JLabel();
+        labelIssuesEntity = new javax.swing.JLabel();
+        labelIssuesTextDescription = new javax.swing.JLabel();
+        labelIssuesTextEntryDate = new javax.swing.JLabel();
+        labelIssuesTextEndDate = new javax.swing.JLabel();
+        labelIssuesTextNumHours = new javax.swing.JLabel();
+        labelIssuesTextEntity = new javax.swing.JLabel();
+        buttonBack = new javax.swing.JButton();
+        buttonNext = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        setForeground(new java.awt.Color(0, 0, 0));
+
+        labelClientHeader.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientHeader.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        labelClientHeader.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientHeader.setText("CLIENTE");
+
+        jSeparator1.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator1.setForeground(new java.awt.Color(0, 50, 71));
+
+        labelClientName.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientName.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelClientName.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientName.setText("Nombre:");
+
+        labelClientSurname.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientSurname.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelClientSurname.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientSurname.setText("Apellido:");
+
+        labelClientNIF.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientNIF.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelClientNIF.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientNIF.setText("NIF:");
+
+        labelClientAddress.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientAddress.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelClientAddress.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientAddress.setText("Dirección:");
+
+        labelClientPhone.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientPhone.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelClientPhone.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientPhone.setText("Teléfono:");
+
+        labelClientCode.setBackground(new java.awt.Color(255, 255, 255));
+        labelClientCode.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        labelClientCode.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientCode.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        labelClientCode.setText("Cod");
+
+        listIssues.setBackground(new java.awt.Color(255, 255, 255));
+        listIssues.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 50, 71)));
+        listIssues.setForeground(new java.awt.Color(0, 50, 71));
+        listIssues.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listIssuesValueChanged(evt);
+            }
+        });
+        jScrollPane.setViewportView(listIssues);
+
+        labelIssuesHeader.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesHeader.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        labelIssuesHeader.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesHeader.setText("ASUNTOS");
+
+        labelClientTextName.setBackground(new java.awt.Color(204, 204, 255));
+        labelClientTextName.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelClientTextName.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientTextName.setText("Text");
+
+        labelClientTextSurname.setBackground(new java.awt.Color(204, 204, 255));
+        labelClientTextSurname.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelClientTextSurname.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientTextSurname.setText("Text");
+
+        labelClientTextNIF.setBackground(new java.awt.Color(204, 204, 255));
+        labelClientTextNIF.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelClientTextNIF.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientTextNIF.setText("Text");
+
+        labelClientTextAddress.setBackground(new java.awt.Color(204, 204, 255));
+        labelClientTextAddress.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelClientTextAddress.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientTextAddress.setText("Text");
+
+        labelClientTextPhone.setBackground(new java.awt.Color(204, 204, 255));
+        labelClientTextPhone.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelClientTextPhone.setForeground(new java.awt.Color(0, 50, 71));
+        labelClientTextPhone.setText("Text");
+
+        jSeparator3.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator3.setForeground(new java.awt.Color(0, 50, 71));
+
+        labelIssuesDescription.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesDescription.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesDescription.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesDescription.setText("Descripción:");
+
+        labelIssuesEntryDate.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesEntryDate.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesEntryDate.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesEntryDate.setText("Fecha alta:");
+
+        labelIssuesEndDate.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesEndDate.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesEndDate.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesEndDate.setText("Fecha fin:");
+
+        labelIssuesNumHours.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesNumHours.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesNumHours.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesNumHours.setText("Número horas:");
+
+        labelIssuesEntity.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesEntity.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesEntity.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesEntity.setText("Órgano:");
+
+        labelIssuesTextDescription.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextDescription.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextDescription.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextDescription.setText("-");
+
+        labelIssuesTextEntryDate.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextEntryDate.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextEntryDate.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextEntryDate.setText("-");
+
+        labelIssuesTextEndDate.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextEndDate.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextEndDate.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextEndDate.setText("-");
+
+        labelIssuesTextNumHours.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextNumHours.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextNumHours.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextNumHours.setText("-");
+
+        labelIssuesTextEntity.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextEntity.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextEntity.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextEntity.setText("-");
+
+        buttonBack.setBackground(new java.awt.Color(0, 50, 71));
+        buttonBack.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        buttonBack.setForeground(new java.awt.Color(255, 255, 255));
+        buttonBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/leftArrow.png"))); // NOI18N
+        buttonBack.setBorder(null);
+        buttonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBackActionPerformed(evt);
+            }
+        });
+
+        buttonNext.setBackground(new java.awt.Color(0, 50, 71));
+        buttonNext.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        buttonNext.setForeground(new java.awt.Color(255, 255, 255));
+        buttonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/rightArrow.png"))); // NOI18N
+        buttonNext.setBorder(null);
+        buttonNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(labelClientHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(86, 86, 86)
+                                    .addComponent(labelClientCode, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(labelClientName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(labelClientTextName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelClientAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelClientTextAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelClientNIF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelClientTextNIF, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelClientSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelClientTextSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelIssuesHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelClientPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelClientTextPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buttonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesEntity, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextEntity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextEntryDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextEndDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesNumHours, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextNumHours, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(101, 101, 101)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelClientHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelClientCode, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelClientName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClientTextName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelClientSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClientTextSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelClientNIF, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClientTextNIF, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelClientAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClientTextAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelClientPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClientTextPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelIssuesDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelIssuesTextDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelIssuesEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesTextEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelIssuesEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesTextEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelIssuesNumHours, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesTextNumHours, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelIssuesEntity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesTextEntity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+        QueryNavigation.goBack();
+        showClient();
+    }//GEN-LAST:event_buttonBackActionPerformed
 
+    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
+        QueryNavigation.moveForward();
+        showClient();
+    }//GEN-LAST:event_buttonNextActionPerformed
+
+    private void listIssuesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listIssuesValueChanged
+        try{
+            if(listIssues.getSelectedValue() != null){
+                String[] selected = listIssues.getSelectedValue().split(";");
+
+                labelIssuesTextDescription.setText(selected[1]);
+                labelIssuesTextEntryDate.setText(selected[2]);
+                labelIssuesTextEndDate.setText(selected[3]);
+                labelIssuesTextNumHours.setText(selected[4]);
+                labelIssuesTextEntity.setText(selected[6]);
+            }
+        }catch (Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_listIssuesValueChanged
+    
+    private void resetNavigation(){
+        /**
+         * This method send the default query to the data base that select all the
+         * fields of the table.
+         */
+        QueryNavigation.setQuery(user.getCodLawyer());
+        QueryNavigation.moveForward();
+    }
+    
+    private void showClient(){
+        this.client = QueryNavigation.getCurrent();
+        
+        labelClientTextName.setText(this.client.getClientName());
+        labelClientTextSurname.setText(this.client.getClientSurname());
+        labelClientTextNIF.setText(this.client.getClientNIF());
+        labelClientTextAddress.setText(this.client.getClientAddress());
+        labelClientTextPhone.setText(this.client.getClientTelephone());
+        
+        resetMainJList();
+        
+        buttonBack.setEnabled(!QueryNavigation.isFirst());
+        buttonNext.setEnabled(!QueryNavigation.isLast());
+    }
+    
+    public DefaultListModel modelList(){
+        
+        if(myList == null){
+            model.addElement("No existen registros.");
+        }else{
+            model.removeAllElements();
+            
+            for(Issue issue : myList){
+                model.addElement(issue.toString());
+            }
+        }
+        
+        return model;
+    }
+    
+    public void resetMainJList(){
+        myList = QueryList.getClientIssues(this.conn, client.getCodClient());
+        listIssues.setModel(modelList());
+    }
+    
+    private ArrayList<Issue> myList = new ArrayList();
+    private DefaultListModel<String> model;
+    private Lawyer user = FrameAccess.getUser();
+    private Client client = new Client();
+    private Connection conn;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonNext;
+    private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JLabel labelClientAddress;
+    private javax.swing.JLabel labelClientCode;
+    private javax.swing.JLabel labelClientHeader;
+    private javax.swing.JLabel labelClientNIF;
+    private javax.swing.JLabel labelClientName;
+    private javax.swing.JLabel labelClientPhone;
+    private javax.swing.JLabel labelClientSurname;
+    private javax.swing.JLabel labelClientTextAddress;
+    private javax.swing.JLabel labelClientTextNIF;
+    private javax.swing.JLabel labelClientTextName;
+    private javax.swing.JLabel labelClientTextPhone;
+    private javax.swing.JLabel labelClientTextSurname;
+    private javax.swing.JLabel labelIssuesDescription;
+    private javax.swing.JLabel labelIssuesEndDate;
+    private javax.swing.JLabel labelIssuesEntity;
+    private javax.swing.JLabel labelIssuesEntryDate;
+    private javax.swing.JLabel labelIssuesHeader;
+    private javax.swing.JLabel labelIssuesNumHours;
+    private javax.swing.JLabel labelIssuesTextDescription;
+    private javax.swing.JLabel labelIssuesTextEndDate;
+    private javax.swing.JLabel labelIssuesTextEntity;
+    private javax.swing.JLabel labelIssuesTextEntryDate;
+    private javax.swing.JLabel labelIssuesTextNumHours;
+    private javax.swing.JList<String> listIssues;
     // End of variables declaration//GEN-END:variables
 }
