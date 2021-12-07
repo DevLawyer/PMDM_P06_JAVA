@@ -1,22 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package View;
 
+import Controller.AccessDB;
 import Controller.DateParser;
+import Errors.ErrorsMsg;
+import Errors.ErrorsSaveLogs;
 import Model.Lawyer;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author migva
- */
 public class FrameApp extends javax.swing.JFrame {
 
     /**
@@ -24,7 +28,10 @@ public class FrameApp extends javax.swing.JFrame {
      */
     public FrameApp() {
         initComponents();
-        conn = FrameAccess.getConnection();
+        
+        // Get connection object from access frame to keep the connection active.
+        conn = FrameAccess.getConnection(); 
+        
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch (Exception E){}
@@ -72,6 +79,11 @@ public class FrameApp extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ADA Abogados | Consultores");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Images/adaIcon.png")).getImage());
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         panelLeftBar.setBackground(new java.awt.Color(0, 50, 71));
         panelLeftBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 50, 71)));
@@ -291,6 +303,14 @@ public class FrameApp extends javax.swing.JFrame {
     private void buttonAboutAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAboutAppActionPerformed
         changePanel(panelAbout);
     }//GEN-LAST:event_buttonAboutAppActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            AccessDB.closeConnection(conn);
+        } catch (SQLException ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
+    }//GEN-LAST:event_formWindowClosing
 
 
     private PanelUserProperties panelUser;

@@ -7,6 +7,8 @@
 
 package Controller;
 
+import Errors.ErrorsMsg;
+import Errors.ErrorsSaveLogs;
 import Model.Lawyer;
 import java.sql.*;
 import java.util.logging.Level;
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
 
 public class QueryUserAccess {
     
-    public static boolean getAccess(Connection conn, String user, String password){
+    public static boolean getAccess(Connection conn, String user, String password) throws ErrorsMsg{
         //By default the access is false to prevent an unauthorised access.
         boolean access = false; 
         int rows = 0;
@@ -48,7 +50,7 @@ public class QueryUserAccess {
             pstmt.close();
             rset.close();
         } catch (SQLException ex) {
-            Logger.getLogger(QueryUserAccess.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }
         
         return access;

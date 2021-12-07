@@ -7,14 +7,14 @@
 
 package Controller;
 
+import Errors.*;
 import java.sql.*;
-
 
 public class AccessDB {
     
     private static Connection conn;
 
-    public static Connection getConnection() {
+    public static Connection getConnection(){
         /**
          * This method create the connection with the data base passed as parameter
          * the url of local data base host, the user and the password.
@@ -23,22 +23,20 @@ public class AccessDB {
             String url = "jdbc:derby://localhost:1527/LawOffice";
             Class.forName("org.apache.derby.jdbc.ClientDriver");	
             conn = DriverManager.getConnection(url,"superAdmin","superAdmin");
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         } catch (SQLException ex) { 
-            System.out.println("Error al conectar con la base de datos.");
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }
         return conn;
     } 
     
-    public static void closeConnection() {
+    public static void closeConnection(Connection conn) throws SQLException {
         /**
          * This method close the Connection with the DB.
          */
-        try {
+        if(conn != null){
             conn.close();
-        } catch (Exception ignored) {
-        
         }
     } 
 }

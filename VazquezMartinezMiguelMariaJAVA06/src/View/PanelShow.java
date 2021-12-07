@@ -7,6 +7,8 @@ package View;
 
 import Controller.QueryList;
 import Controller.QueryNavigation;
+import Errors.ErrorsMsg;
+import Errors.ErrorsSaveLogs;
 import Model.Client;
 import Model.Issue;
 import Model.Lawyer;
@@ -25,13 +27,24 @@ public class PanelShow extends javax.swing.JPanel {
      * Creates new form PanelShow
      */
     public PanelShow(Connection conn) {
-        initComponents();
-        this.conn = conn;
-        this.model = new DefaultListModel();
-        QueryNavigation.startNavigation(this.conn);
-        resetNavigation();
-        showClient();
-        resetMainJList();
+        try {
+            /**
+             * This constructor recieve the connection object as parameter to keep
+             * the connection active.
+             */
+            
+            initComponents();
+            
+            this.conn = conn;
+            this.model = new DefaultListModel();
+            
+            QueryNavigation.startNavigation(this.conn, user.getCodLawyer());
+            resetNavigation();
+            showClient();
+            resetMainJList();
+        } catch (ErrorsMsg ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
     }
 
     /**
@@ -72,6 +85,8 @@ public class PanelShow extends javax.swing.JPanel {
         labelIssuesTextEntity = new javax.swing.JLabel();
         buttonBack = new javax.swing.JButton();
         buttonNext = new javax.swing.JButton();
+        labelIssuesCost = new javax.swing.JLabel();
+        labelIssuesTextCost = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setForeground(new java.awt.Color(0, 0, 0));
@@ -230,6 +245,16 @@ public class PanelShow extends javax.swing.JPanel {
             }
         });
 
+        labelIssuesCost.setBackground(new java.awt.Color(255, 255, 255));
+        labelIssuesCost.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        labelIssuesCost.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesCost.setText("Coste:");
+
+        labelIssuesTextCost.setBackground(new java.awt.Color(204, 204, 255));
+        labelIssuesTextCost.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        labelIssuesTextCost.setForeground(new java.awt.Color(0, 50, 71));
+        labelIssuesTextCost.setText("-");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -278,6 +303,10 @@ public class PanelShow extends javax.swing.JPanel {
                                 .addComponent(buttonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelIssuesCost, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelIssuesTextCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(labelIssuesDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -358,21 +387,38 @@ public class PanelShow extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelIssuesEntity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelIssuesTextEntity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelIssuesCost, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIssuesTextCost, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        QueryNavigation.goBack();
-        showClient();
+        try {
+            QueryNavigation.goBack();
+            showClient();
+        } catch (ErrorsMsg ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-        QueryNavigation.moveForward();
-        showClient();
+        try {
+            QueryNavigation.moveForward();
+            showClient();
+        } catch (ErrorsMsg ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void listIssuesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listIssuesValueChanged
+        /**
+         * This method split the string returned from toString method of issue object
+         * to show the data of the selected value.
+         */
+        
         try{
             if(listIssues.getSelectedValue() != null){
                 String[] selected = listIssues.getSelectedValue().split(";");
@@ -381,7 +427,8 @@ public class PanelShow extends javax.swing.JPanel {
                 labelIssuesTextEntryDate.setText(selected[2]);
                 labelIssuesTextEndDate.setText(selected[3]);
                 labelIssuesTextNumHours.setText(selected[4]);
-                labelIssuesTextEntity.setText(selected[6]);
+                labelIssuesTextEntity.setText(QueryList.getNameEntity(conn, Integer.valueOf(selected[6])));
+                labelIssuesTextCost.setText(selected[7]+" €");
             }
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -393,11 +440,15 @@ public class PanelShow extends javax.swing.JPanel {
          * This method send the default query to the data base that select all the
          * fields of the table.
          */
-        QueryNavigation.setQuery(user.getCodLawyer());
+        QueryNavigation.executeQuery();
         QueryNavigation.moveForward();
     }
     
-    private void showClient(){
+    private void showClient() throws ErrorsMsg{
+        /**
+         * This method show the data client in the panel and the issues related with it.
+         */
+        
         this.client = QueryNavigation.getCurrent();
         
         labelClientTextName.setText(this.client.getClientName());
@@ -408,14 +459,21 @@ public class PanelShow extends javax.swing.JPanel {
         
         resetMainJList();
         
-        buttonBack.setEnabled(!QueryNavigation.isFirst());
-        buttonNext.setEnabled(!QueryNavigation.isLast());
+        if(myList == null || myList.isEmpty()){
+            buttonBack.setEnabled(false);
+            buttonNext.setEnabled(false);
+        } else {
+            buttonBack.setEnabled(!QueryNavigation.isFirst());
+            buttonNext.setEnabled(!QueryNavigation.isLast());
+        }
     }
     
     public DefaultListModel modelList(){
         
-        if(myList == null){
+        if(myList == null || myList.isEmpty()){
+            model.removeAllElements();
             model.addElement("No existen registros.");
+            listIssues.setEnabled(false);
         }else{
             model.removeAllElements();
             
@@ -427,7 +485,7 @@ public class PanelShow extends javax.swing.JPanel {
         return model;
     }
     
-    public void resetMainJList(){
+    public void resetMainJList() throws ErrorsMsg{
         myList = QueryList.getClientIssues(this.conn, client.getCodClient());
         listIssues.setModel(modelList());
     }
@@ -456,12 +514,14 @@ public class PanelShow extends javax.swing.JPanel {
     private javax.swing.JLabel labelClientTextName;
     private javax.swing.JLabel labelClientTextPhone;
     private javax.swing.JLabel labelClientTextSurname;
+    private javax.swing.JLabel labelIssuesCost;
     private javax.swing.JLabel labelIssuesDescription;
     private javax.swing.JLabel labelIssuesEndDate;
     private javax.swing.JLabel labelIssuesEntity;
     private javax.swing.JLabel labelIssuesEntryDate;
     private javax.swing.JLabel labelIssuesHeader;
     private javax.swing.JLabel labelIssuesNumHours;
+    private javax.swing.JLabel labelIssuesTextCost;
     private javax.swing.JLabel labelIssuesTextDescription;
     private javax.swing.JLabel labelIssuesTextEndDate;
     private javax.swing.JLabel labelIssuesTextEntity;

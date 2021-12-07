@@ -11,10 +11,9 @@ import Model.Client;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.PreparedStatement;
 
 public class QueryNavigation {
     /**
@@ -22,32 +21,33 @@ public class QueryNavigation {
      * as a paremeter.
      */
     
-    private static Statement stmt = null;
+    private static PreparedStatement pstmt = null;
     private static ResultSet rset = null;
-    private static ArrayList list;
         
-    public static void startNavigation(Connection conn){
+    public static void startNavigation(Connection conn, int cod_lawyer){
         /**
          * This method create a statement to read one by one all the rows 
          * of the result of the query.
          */
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+            String query = "SELECT * FROM client WHERE cod_lawyer = ? ORDER BY cod_client";
+            pstmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, 
                                         ResultSet.CONCUR_READ_ONLY);
+            pstmt.setInt(1, cod_lawyer);
         } catch (SQLException ex) {
             Logger.getLogger(QueryNavigation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public static void setQuery(int cod_lawyer){
+    public static void executeQuery(){
         /**
          * This method send a query receive as a parameter.
          * 
          * @param query which send in other part of the application.
          */
         try {
-            String query = "SELECT * FROM client WHERE cod_lawyer = "+cod_lawyer+ "ORDER BY cod_client";
-            rset = stmt.executeQuery(query);
+            
+            rset = pstmt.executeQuery();
             if(rset.next()){
                 rset.beforeFirst();
             }
@@ -104,7 +104,7 @@ public class QueryNavigation {
     public static Client getCurrent(){
         /**
          * This method return the current resultset packed as
-         * object.
+         * client object.
          */
         Client client = new Client();
         if(rset != null){
@@ -165,7 +165,7 @@ public class QueryNavigation {
          * This method close resultset and statement with the data base.
          */
         try {
-            stmt.close();
+            pstmt.close();
             rset.close();
         } catch (SQLException ex) {
             Logger.getLogger(QueryNavigation.class.getName()).log(Level.SEVERE, null, ex);

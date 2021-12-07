@@ -1,11 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template photo, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package View;
 
+import Controller.DateParser;
 import Controller.QueryUpdate;
+import Errors.*;
 import Model.Lawyer;
 import java.io.EOFException;
 import java.io.File;
@@ -19,20 +23,22 @@ import java.sql.Connection;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-
-/**
- *
- * @author migva
- */
 public class PanelUserProperties extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelUserProperties
+     * Creates new form PanelUserProperties.
      */
     public PanelUserProperties(Connection conn, Lawyer user) {
+        /**
+         * This constructor recieve the connection object as parameter to keep 
+         * the connection active and the logged in user.
+         */
+        
         initComponents();
+        
         this.user = user;
         this.conn = conn;
+        
         showUser();
     }
 
@@ -56,7 +62,6 @@ public class PanelUserProperties extends javax.swing.JPanel {
         fieldUserName = new javax.swing.JTextField();
         fieldUserSurname = new javax.swing.JTextField();
         fieldUserDNI = new javax.swing.JTextField();
-        fieldUserEntryDate = new javax.swing.JTextField();
         fieldUserPhone = new javax.swing.JTextField();
         labelUserUserName = new javax.swing.JLabel();
         fieldUserUserName = new javax.swing.JTextField();
@@ -65,6 +70,7 @@ public class PanelUserProperties extends javax.swing.JPanel {
         jSeparator2 = new javax.swing.JSeparator();
         infoDNI = new javax.swing.JLabel();
         infoEntryDate = new javax.swing.JLabel();
+        fieldUserEntryDate = new com.toedter.calendar.JDateChooser();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setForeground(new java.awt.Color(0, 0, 0));
@@ -130,10 +136,6 @@ public class PanelUserProperties extends javax.swing.JPanel {
         fieldUserDNI.setBackground(new java.awt.Color(255, 255, 255));
         fieldUserDNI.setForeground(new java.awt.Color(0, 50, 71));
         fieldUserDNI.setCaretColor(new java.awt.Color(0, 50, 71));
-
-        fieldUserEntryDate.setBackground(new java.awt.Color(255, 255, 255));
-        fieldUserEntryDate.setForeground(new java.awt.Color(0, 50, 71));
-        fieldUserEntryDate.setCaretColor(new java.awt.Color(0, 50, 71));
 
         fieldUserPhone.setEditable(false);
         fieldUserPhone.setBackground(new java.awt.Color(255, 255, 255));
@@ -210,55 +212,61 @@ public class PanelUserProperties extends javax.swing.JPanel {
             }
         });
 
+        fieldUserEntryDate.setBackground(new java.awt.Color(255, 255, 255));
+        fieldUserEntryDate.setForeground(new java.awt.Color(0, 50, 71));
+        fieldUserEntryDate.setDateFormatString("yyyy-MM-dd");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(100, 100, 100)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(117, 117, 117)
-                        .addComponent(buttonChangeImage, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(labelUserUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldUserUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
+                        .addComponent(labelImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelUserUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(labelUserSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fieldUserUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(buttonSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(fieldUserSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(40, 40, 40)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelUserSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldUserSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelUserDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldUserDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelUserPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fieldUserPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(jSeparator1)
-                            .addComponent(labelUserHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelUserDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldUserDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldUserEntryDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelUserPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldUserPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(labelUserHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator2)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(infoEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(infoDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(buttonChangeImage, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jSeparator1))
+                        .addGap(150, 150, 150)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(infoEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(infoDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -286,10 +294,9 @@ public class PanelUserProperties extends javax.swing.JPanel {
                                 .addComponent(fieldUserDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(fieldUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(infoEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(infoEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldUserEntryDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(labelUserPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -312,6 +319,11 @@ public class PanelUserProperties extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonChangeImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeImageActionPerformed
+        /**
+         * This method change the photo field in the data base and copy the selected
+         * photo in the project directory.
+         */
+        
         try {
             File photo = null;
             int select = fileChooser.showOpenDialog(null);
@@ -323,31 +335,50 @@ public class PanelUserProperties extends javax.swing.JPanel {
             }
             
             if(!photo.getName().equals(user.getLawyerPhoto())){           
-                    String path = "./src/Images_user/"+photo.getName();
-                    Files.copy(photo.toPath(), Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
-                    user.setLawyerPhoto(photo.getName());
-                    QueryUpdate.updateLawyer(conn, user);
-                    showUser();                    
+                /**
+                 * If the photo isn't equals of the user photo then change it in
+                 * the data base. In other case inform the user about this.
+                 */
+                
+                String path = "./src/Images_user/"+photo.getName();
+                Files.copy(photo.toPath(), Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
+                user.setLawyerPhoto(photo.getName());
+                QueryUpdate.updateLawyer(conn, user);
+                showUser();                    
             } else {
                 JOptionPane.showMessageDialog(null, "Ha elegido la misma imagen.", "ALERTA", JOptionPane.WARNING_MESSAGE );
             }
             
         } catch (FileNotFoundException ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
             JOptionPane.showMessageDialog(null, "ERROR fichero no encontrado.", "ERROR", JOptionPane.ERROR_MESSAGE);
         } catch(EOFException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Información cargada.", "AVISO", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
             JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_buttonChangeImageActionPerformed
 
     private void buttonSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveChangesActionPerformed
-        if(fieldUserDNI.getText() == user.getLawyerNIF() && fieldUserEntryDate.getText() == user.getLawyerEntryDateFormat()){
-            user.setLawyerNIF(fieldUserDNI.getText());
-            user.setLawyerEntryDate(fieldUserEntryDate.getText());
-            QueryUpdate.updateLawyer(conn, user);
-            JOptionPane.showMessageDialog(null, "Datos actualizados.","AVISO", JOptionPane.INFORMATION_MESSAGE);
-            showUser();
+        /**
+         * This method change the user NIF and/or user entry date if one of them
+         * is diferent.
+         */
+        
+        if(!fieldUserDNI.getText().equals(user.getLawyerNIF()) || !DateParser.toString(fieldUserEntryDate.getDate()).equals(user.getLawyerEntryDateFormat())){
+            try {
+                user.setLawyerNIF(fieldUserDNI.getText());
+                user.setLawyerEntryDate(DateParser.toString(fieldUserEntryDate.getDate()));
+                QueryUpdate.updateLawyer(conn, user);
+                JOptionPane.showMessageDialog(null, "Datos actualizados.","AVISO", JOptionPane.INFORMATION_MESSAGE);
+                showUser();
+                
+            } catch (ErrorsMsg ex) {
+                ErrorsSaveLogs.saveLogError(ex.getMessage());
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "No ha modificado ningún dato.", "ALERTA", JOptionPane.WARNING_MESSAGE );
         }
@@ -386,10 +417,15 @@ public class PanelUserProperties extends javax.swing.JPanel {
     }//GEN-LAST:event_infoEntryDateMouseExited
     
     private void showUser(){
+        /**
+         * This method get all the information of the user logged in and show all
+         * the information in the screen. 
+         */
+        
         fieldUserName.setText(user.getLawyerName());
         fieldUserSurname.setText(user.getLawyerSurname());
         fieldUserDNI.setText(user.getLawyerNIF());
-        fieldUserEntryDate.setText(user.getLawyerEntryDateFormat());
+        fieldUserEntryDate.setDate(user.getLawyerEntryDate().getTime());
         fieldUserPhone.setText(String.valueOf(user.getLawyerPhoneExt()));
         fieldUserUserName.setText(user.getLawyerUserName());
         labelImage.setIcon(new ImageIcon("./src/Images_user/"+user.getLawyerPhoto()));
@@ -402,7 +438,7 @@ public class PanelUserProperties extends javax.swing.JPanel {
     private javax.swing.JButton buttonChangeImage;
     private javax.swing.JButton buttonSaveChanges;
     private javax.swing.JTextField fieldUserDNI;
-    private javax.swing.JTextField fieldUserEntryDate;
+    private com.toedter.calendar.JDateChooser fieldUserEntryDate;
     private javax.swing.JTextField fieldUserName;
     private javax.swing.JTextField fieldUserPhone;
     private javax.swing.JTextField fieldUserSurname;

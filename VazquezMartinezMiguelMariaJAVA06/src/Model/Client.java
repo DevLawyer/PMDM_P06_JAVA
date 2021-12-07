@@ -1,26 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package Model;
 
-/**
- *
- * @author migva
- */
 public class Client {
-    private int cod_client;
-    private String client_name;
-    private String client_surname;
-    private String client_nif;
-    private String client_address;
-    private String telephone_num;
-    private String lawyer_nif;
-    
-    public Client(){
-        
-    }
+
+    // CONSTRUCTOR METHODS /////////////////////////////////////////////////////
+    public Client(){}
     
     public Client(int cod_client, String client_name, String client_surname, String client_nif, String client_address, String telephone_num, String lawyer_nif){
         this.cod_client = cod_client;
@@ -32,6 +22,8 @@ public class Client {
         this.lawyer_nif = lawyer_nif;
     }
     
+    
+    // GETTER METHODS //////////////////////////////////////////////////////////
     public int getCodClient(){
         return cod_client;
     }
@@ -56,6 +48,7 @@ public class Client {
         return telephone_num;
     }
     
+    
     public String toString(){
         return  String.valueOf(cod_client)+";"+
                 client_name+";"+
@@ -64,4 +57,14 @@ public class Client {
                 client_address+";"+
                 telephone_num;
     }
+    
+    
+    // ATTRIBUTES //////////////////////////////////////////////////////////////
+    private int cod_client;
+    private String client_name;
+    private String client_surname;
+    private String client_nif;
+    private String client_address;
+    private String telephone_num;
+    private String lawyer_nif;
 }

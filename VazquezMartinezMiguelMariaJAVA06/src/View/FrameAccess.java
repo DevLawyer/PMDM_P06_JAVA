@@ -9,34 +9,43 @@ package View;
 
 import Controller.AccessDB;
 import Controller.QueryUserAccess;
+import Errors.*;
 import Model.Lawyer;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 public class FrameAccess extends javax.swing.JFrame {
 
     /**
-     * Creates new form FrameAccess
+     * Creates new form FrameAccess.
      */
     public FrameAccess() {
-        AccessDB.closeConnection();
-        conn = AccessDB.getConnection();
-        initComponents();
         try {
-            if(!conn.isClosed()){
-                labelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/greenDot.png")));
+            AccessDB.closeConnection(conn);
+            conn = AccessDB.getConnection();
+            initComponents();
+            
+            /**
+             * This try block check if the application is connected with the data base
+             * and change de fram icon. The frame icon will be green if the application
+             * is connected or red in other case.
+             */
+            if(conn != null && !conn.isClosed()){
+                setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Images/greenDot.png")).getImage());
             } else {
-                labelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/redDot.png")));
+                setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Images/redDot.png")).getImage());
+                textFieldUser.setEnabled(false);
+                textFieldPassword.setEnabled(false);
+                buttonAcept.setEnabled(false);
             }
+            charPassword = textFieldPassword.getEchoChar();
+            pack();
         } catch (SQLException ex) {
-            Logger.getLogger(FrameAccess.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }
-        pack();
+
     }
 
     /**
@@ -49,7 +58,6 @@ public class FrameAccess extends javax.swing.JFrame {
     private void initComponents() {
 
         panelMain = new javax.swing.JPanel();
-        labelIcon = new javax.swing.JLabel();
         panelLogo = new javax.swing.JLabel();
         labelAccessMsg = new javax.swing.JLabel();
         labelHeader = new javax.swing.JLabel();
@@ -59,18 +67,20 @@ public class FrameAccess extends javax.swing.JFrame {
         labelUser = new javax.swing.JLabel();
         labelPassword = new javax.swing.JLabel();
         buttonAcept = new javax.swing.JButton();
+        labelShowPassword = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("INICIAR SESIÓN");
         setBackground(new java.awt.Color(255, 255, 255));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Images/adaIcon.png")).getImage());
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         panelMain.setBackground(new java.awt.Color(255, 255, 255));
-
-        labelIcon.setBackground(new java.awt.Color(255, 255, 255));
-        labelIcon.setForeground(new java.awt.Color(255, 255, 255));
-        labelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/redDot.png"))); // NOI18N
 
         panelLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         panelLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/adaLogo.png"))); // NOI18N
@@ -122,39 +132,54 @@ public class FrameAccess extends javax.swing.JFrame {
             }
         });
 
+        labelShowPassword.setBackground(new java.awt.Color(255, 255, 255));
+        labelShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eyeIconOFF.png"))); // NOI18N
+        labelShowPassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelShowPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelShowPasswordMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                labelShowPasswordMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMainLayout.createSequentialGroup()
-                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelMainLayout.createSequentialGroup()
                             .addGap(35, 35, 35)
                             .addComponent(panelLogo))
                         .addGroup(panelMainLayout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelShowPassword)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelMainLayout.createSequentialGroup()
-                            .addGap(100, 100, 100)
-                            .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
-                                .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(labelAccessMsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(100, 100, 100)
+                                .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelAccessMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGap(288, 288, 288)))
         );
         panelMainLayout.setVerticalGroup(
@@ -164,24 +189,24 @@ public class FrameAccess extends javax.swing.JFrame {
                 .addComponent(panelLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
-                .addComponent(labelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(39, 39, 39)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelShowPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(52, Short.MAX_VALUE))
             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelMainLayout.createSequentialGroup()
                     .addGap(244, 244, 244)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(6, 6, 6)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(labelAccessMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGap(84, 84, 84)
                     .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -202,14 +227,49 @@ public class FrameAccess extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        appAccess();
+        try {
+            appAccess();
+        } catch (ErrorsMsg ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
     }//GEN-LAST:event_buttonAceptActionPerformed
 
     private void buttonAceptKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buttonAceptKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
-            appAccess();
+            try {
+                appAccess();
+            } catch (ErrorsMsg ex) {
+                ErrorsSaveLogs.saveLogError(ex.getMessage());
+            }
         }
     }//GEN-LAST:event_buttonAceptKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            AccessDB.closeConnection(conn);
+        } catch (SQLException ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void labelShowPasswordMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelShowPasswordMousePressed
+
+    }//GEN-LAST:event_labelShowPasswordMousePressed
+
+    private void labelShowPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelShowPasswordMouseClicked
+        /**
+         * This method hide or show the password to assist the user.
+         */
+        if(showPassword){
+            showPassword = false;
+            labelShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eyeIconOFF.png")));
+            textFieldPassword.setEchoChar(charPassword);
+        } else {
+            showPassword = true;
+            labelShowPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eyeIconON.png")));
+            textFieldPassword.setEchoChar((char)0);
+        }
+    }//GEN-LAST:event_labelShowPasswordMouseClicked
 
     /**
      * @param args the command line arguments
@@ -233,7 +293,7 @@ public class FrameAccess extends javax.swing.JFrame {
         });
     }    
     
-    private void appAccess(){
+    private void appAccess() throws ErrorsMsg{
         if("".equals(textFieldUser.getText()) || "".equals(String.valueOf(textFieldPassword.getPassword()))){
             labelAccessMsg.setText("Debe indicar Usuario y Contraseña.");
             textFieldPassword.setText("");
@@ -263,14 +323,16 @@ public class FrameAccess extends javax.swing.JFrame {
     
     private static Connection conn;
     private static Lawyer user = new Lawyer();
+    private static boolean showPassword = false;
+    private static char charPassword;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAcept;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelAccessMsg;
     private javax.swing.JLabel labelHeader;
-    private javax.swing.JLabel labelIcon;
     private javax.swing.JLabel labelPassword;
+    private javax.swing.JLabel labelShowPassword;
     private javax.swing.JLabel labelUser;
     private javax.swing.JLabel panelLogo;
     private javax.swing.JPanel panelMain;

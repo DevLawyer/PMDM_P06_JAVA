@@ -1,39 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package View;
 
 import Controller.DateParser;
 import Controller.QueryList;
 import Controller.QueryUpdate;
+import Errors.*;
 import Model.*;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
-import java.util.GregorianCalendar;
 
-/**
- *
- * @author migva
- */
 public class PanelRegister extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelRegister
+     * Creates new form PanelRegister.
      */
     public PanelRegister(Connection conn, Lawyer user) {
+        /**
+         * This constructor recieve the connection object as parameter to keep 
+         * the connection active and the logged in user.
+         */
+        
         initComponents();
+        
         this.conn = conn;
         this.user = user;
         modelClient = new DefaultComboBoxModel();
         modelEntity = new DefaultComboBoxModel();
         
-        listClient = QueryList.getColumn(this.conn, "cod_client", "client");
-        listEntity = QueryList.getColumn(this.conn, "entity_name", "entity");
+        listClient = QueryList.getClients(this.conn, user.getCodLawyer());
+        listEntity = QueryList.getEntityList(this.conn, "entity_name", "entity");
         
         comboBoxClient.setModel(chargeClientComboBox());
         comboBoxEntity.setModel(chargeEntityComboBox());
@@ -289,9 +293,130 @@ public class PanelRegister extends javax.swing.JPanel {
 
     private void buttonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearActionPerformed
         /**
-         * This method check if the filter has been selected and reset the information
-         * and the combobox option.
+         * This method check if the filter has been selected and reset the text 
+         * fields and the combobox option.
          */
+        clearScreen();
+       
+    }//GEN-LAST:event_buttonClearActionPerformed
+
+    private void fieldRegisterIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldRegisterIssueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldRegisterIssueActionPerformed
+
+    private void comboBoxClientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxClientItemStateChanged
+        /**
+         * This method get the maximum cod_issue to show the new cod_issue number
+         * in the screen and save it in the variable cod_issue.
+         */
+        
+        if(!"CLIENTE".equals(comboBoxClient.getSelectedItem().toString())){
+            cod_issue = QueryList.getValue(this.conn, comboBoxClient.getSelectedItem().toString());
+            cod_issue = String.valueOf(Integer.parseInt(cod_issue) + 1);
+            fieldRegisterIssue.setText(cod_issue);
+        }
+    }//GEN-LAST:event_comboBoxClientItemStateChanged
+
+    private void comboBoxClientMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxClientMousePressed
+
+    }//GEN-LAST:event_comboBoxClientMousePressed
+
+    private void fieldRegisterDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldRegisterDescriptionKeyPressed
+        /**
+         * When the user exceed 50 character lenght the text field change the color
+         * to inform the user about this error.
+         */
+        
+        if(fieldRegisterDescription.getText().length() > 50){
+            fieldRegisterDescription.setBackground(new Color(255, 66, 66));
+        }else{
+            fieldRegisterDescription.setBackground(Color.WHITE);
+        }
+    }//GEN-LAST:event_fieldRegisterDescriptionKeyPressed
+
+    private void buttonAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAcceptActionPerformed
+        /**
+         * This method check input data and, if the data is correct create an 
+         * issue object and call the insert method into data base.
+         */
+        
+        try {
+            ErrorsMsg.checkNumHours(fieldRegisterHours.getText());
+            ErrorsMsg.checkIssueDescription(fieldRegisterDescription.getText());
+            ErrorsMsg.checkDates(dateChooserEntryDate.getDate(), dateChooserEndDate.getDate());
+            ErrorsMsg.checkComboBox(comboBoxClient.getSelectedItem().toString(), comboBoxEntity.getSelectedItem().toString());
+            
+            Issue issue = new Issue(
+                    Integer.valueOf(cod_issue),
+                    fieldRegisterDescription.getText(),
+                    DateParser.toString(dateChooserEntryDate.getDate()),
+                    dateChooserEndDate.getDate() == null? null:DateParser.toString(dateChooserEndDate.getDate()),
+                    Integer.valueOf(fieldRegisterHours.getText()),
+                    Integer.valueOf(comboBoxClient.getSelectedItem().toString()),
+                    QueryList.getCodEntity(conn, comboBoxEntity.getSelectedItem().toString()),
+                    (user.getLawyerHoursFee()*Integer.valueOf(fieldRegisterHours.getText()))
+            );
+
+            QueryUpdate.insertIssue(conn, issue);
+            JOptionPane.showMessageDialog(null, "Asunto insertado con éxito.", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+            clearScreen();
+            
+        } catch (ErrorsMsg ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buttonAcceptActionPerformed
+    
+    private DefaultComboBoxModel chargeClientComboBox(){
+        /**
+         * This method charge in the comboBox model client with the word EMPTY 
+         * if the data base does not connect or the table of data base is empty 
+         * or charge the comboBox with the cod_clients of the table.
+         * 
+         * @return the model with the information charged.
+         */
+        
+        if(listClient == null){
+            modelClient.addElement("VACÍO");
+        }else{
+            modelClient.removeAllElements();
+            modelClient.addElement("CLIENTE");
+            for(String client : listClient){
+                modelClient.addElement(client);
+            }
+        }
+        
+        return modelClient;
+    }
+    
+    private DefaultComboBoxModel chargeEntityComboBox(){
+        /**
+         * This method charge in the comboBox model entity with the word EMPTY 
+         * if the data base does not connect or the table of data base is empty 
+         * or charge the comboBox with the entity_name of the table.
+         * 
+         * @return the model with the information charged.
+         */
+        
+        if(listEntity == null){
+            modelEntity.addElement("VACÍO");
+        }else{
+            modelEntity.removeAllElements();
+            modelEntity.addElement("ÓRGANO");
+            for(String entity : listEntity){
+                modelEntity.addElement(entity);
+            }
+        }
+        
+        return modelEntity;
+    }
+    
+    private void clearScreen(){
+        /**
+         * This method clear the screen or inform the user if the screen is already 
+         * clear.
+         */
+        
         if( fieldRegisterDescription.getText() == ""
             && dateChooserEntryDate.getDate() == null
             && dateChooserEndDate.getDate() == null
@@ -308,137 +433,6 @@ public class PanelRegister extends javax.swing.JPanel {
             comboBoxClient.setSelectedIndex(0);
             comboBoxEntity.setSelectedIndex(0);            
         }
-       
-    }//GEN-LAST:event_buttonClearActionPerformed
-
-    private void fieldRegisterIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldRegisterIssueActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fieldRegisterIssueActionPerformed
-
-    private void comboBoxClientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxClientItemStateChanged
-        if(comboBoxClient.getSelectedItem().toString() != "CLIENTE"){
-            cod_issue = QueryList.getValue(this.conn, comboBoxClient.getSelectedItem().toString());
-            cod_issue = String.valueOf(Integer.parseInt(cod_issue) + 1);
-            fieldRegisterIssue.setText(cod_issue);
-        }
-    }//GEN-LAST:event_comboBoxClientItemStateChanged
-
-    private void comboBoxClientMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboBoxClientMousePressed
-
-    }//GEN-LAST:event_comboBoxClientMousePressed
-
-    private void fieldRegisterDescriptionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldRegisterDescriptionKeyPressed
-        if(fieldRegisterDescription.getText().length() > 50){
-            fieldRegisterDescription.setBackground(new Color(255, 66, 66));
-        }else{
-            fieldRegisterDescription.setBackground(Color.WHITE);
-        }
-    }//GEN-LAST:event_fieldRegisterDescriptionKeyPressed
-
-    private void buttonAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAcceptActionPerformed
-        if(checkIssueDescription() && checkDates() && checkNumHours() && checkComboBox()){
-            Issue issue = new Issue(
-                Integer.valueOf(cod_issue),
-                fieldRegisterDescription.getText(),
-                DateParser.toString(dateChooserEntryDate.getDate()),
-                DateParser.toString(dateChooserEndDate.getDate()),
-                Integer.valueOf(fieldRegisterHours.getText()),
-                Integer.valueOf(comboBoxClient.getSelectedItem().toString()),
-                QueryList.getCodEntity(conn, comboBoxEntity.getSelectedItem().toString()),
-                (user.getLawyerHoursFee()*Integer.valueOf(fieldRegisterHours.getText()))
-            );
-            
-            QueryUpdate.insertIssue(conn, issue);
-        }
-    }//GEN-LAST:event_buttonAcceptActionPerformed
-    
-    private boolean checkIssueDescription(){
-        if(fieldRegisterDescription.getText().length() > 50){
-            JOptionPane.showMessageDialog(null, "La descripción es demasiado larga.", "ERROR", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    private boolean checkDates(){
-        boolean check = true;
-        if(dateChooserEntryDate.getDate() == null){
-            JOptionPane.showMessageDialog(null, "Debe indicar el menos una fecha de inicio.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        } else if(dateChooserEndDate.getDate() != null && dateChooserEntryDate.getDate().compareTo(dateChooserEndDate.getDate()) > 0){
-            JOptionPane.showMessageDialog(null, "La fecha de finalización no puede ser anterior al inicio.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        }
-        return check;
-    }
-    
-    private boolean checkNumHours(){
-        boolean check = true;
-        try{
-            if(Integer.valueOf(fieldRegisterHours.getText()) < 0){
-                JOptionPane.showMessageDialog(null, "Las horas dedicadas no pueden ser negativas.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-                check = false;
-            }
-        } catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(null, "No ha introducido un número.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        }
-        return check;
-    }
-    
-    private boolean checkComboBox(){
-        boolean check = true;
-        if("CLIENTE".equals(comboBoxClient.getSelectedItem().toString())){
-            JOptionPane.showMessageDialog(null, "No ha seleccionado un cliente.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        } else if ("ÓRGANO".equals(comboBoxEntity.getSelectedItem().toString())){
-            JOptionPane.showMessageDialog(null, "No ha seleccionado un órgano.", "ALERTA", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        }
-        return check;
-    }
-    
-    private DefaultComboBoxModel chargeClientComboBox(){
-        /**
-         * This method charge in the comboBox model the word EMPTY if the data base
-         * does not connect or the table of data base is empty or charge the comboBox
-         * with the surnames of the table.
-         * 
-         * @return the model with the information charged.
-         */
-        if(listClient == null){
-            modelClient.addElement("VACÍO");
-        }else{
-            modelClient.removeAllElements();
-            modelClient.addElement("CLIENTE");
-            for(String client : listClient){
-                modelClient.addElement(client);
-            }
-        }
-        
-        return modelClient;
-    }
-    
-    private DefaultComboBoxModel chargeEntityComboBox(){
-        /**
-         * This method charge in the comboBox model the word EMPTY if the data base
-         * does not connect or the table of data base is empty or charge the comboBox
-         * with the surnames of the table.
-         * 
-         * @return the model with the information charged.
-         */
-        if(listEntity == null){
-            modelEntity.addElement("VACÍO");
-        }else{
-            modelEntity.removeAllElements();
-            modelEntity.addElement("ÓRGANO");
-            for(String entity : listEntity){
-                modelEntity.addElement(entity);
-            }
-        }
-        
-        return modelEntity;
     }
     
     private ArrayList<String> listClient = new ArrayList();

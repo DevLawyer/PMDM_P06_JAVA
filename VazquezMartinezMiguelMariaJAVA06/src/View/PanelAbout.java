@@ -1,17 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package View;
 
 import java.awt.Desktop;
 import java.net.URI;
 
-/**
- *
- * @author migva
- */
 public class PanelAbout extends javax.swing.JPanel {
 
     /**

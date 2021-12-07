@@ -7,6 +7,8 @@
 
 package Controller;
 
+import Errors.ErrorsMsg;
+import Errors.ErrorsSaveLogs;
 import Model.Issue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +22,7 @@ public class QueryList {
     private static ResultSet rset = null;
     private static ArrayList list;
     
-    public static ArrayList getClientIssues(Connection conn, int client){
+    public static ArrayList getClientIssues(Connection conn, int client) throws ErrorsMsg{
         /**
          * This method receive as a parameter a query for the data base to create
          * an arraylist with the rows and return it.
@@ -53,14 +55,14 @@ public class QueryList {
             }
             pstmt.close();
             rset.close();
-        }catch(SQLException e){
-            System.out.println("Error al conectar con la BBDD.");
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }  
 
         return list;
     }
     
-    public static ArrayList getColumn(Connection conn, String columnReturn, String table){
+    public static ArrayList getEntityList(Connection conn, String columnReturn, String table){
         /**
          * This method recieve a query for obtain of the data base one and only one
          * field of a table.
@@ -69,11 +71,10 @@ public class QueryList {
          * @return list with the content of the result of the query.
          */
         try{
-            String query = "SELECT DISTINCT ? FROM * ORDER BY ?";
-            query = query.replace("?", columnReturn);
-            query = query.replace("*", table);
+            String query = "SELECT DISTINCT entity_name FROM entity ORDER BY entity_name";
 
             pstmt = conn.prepareStatement(query);
+            
             rset = pstmt.executeQuery();
             
             list = new ArrayList();
@@ -83,21 +84,43 @@ public class QueryList {
             }
             pstmt.close();
             rset.close();
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }  
         
         return list;
     }
     
-    public static String getValue(Connection conn,String cod){
+    public static ArrayList getClients(Connection conn, int cod_lawyer){
+        try{
+            String query = "SELECT DISTINCT cod_client FROM client WHERE cod_lawyer = ? ORDER BY cod_client";
+
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, cod_lawyer);
+            
+            rset = pstmt.executeQuery();
+            
+            list = new ArrayList();
+
+            while(rset.next()){
+                list.add(rset.getString(1));
+            }
+            pstmt.close();
+            rset.close();
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }  
         
+        return list;
+    }
+    
+    public static String getValue(Connection conn,String cod){  
         String value = "";
         try{
             String query = "SELECT COALESCE(MAX(cod_issue),0) FROM Issue WHERE cod_client = ?";
-            query = query.replace("?", cod);
 
             pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, cod);
             rset = pstmt.executeQuery();
 
             rset.next();
@@ -105,8 +128,8 @@ public class QueryList {
 
             pstmt.close();
             rset.close();
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }  
         
         return value;
@@ -116,9 +139,9 @@ public class QueryList {
         int value = 0;
         try{
             String query = "SELECT cod_entity FROM entity WHERE entity_name = ?";
-            query = query.replace("?", entity_name);
 
             pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, entity_name);
             rset = pstmt.executeQuery();
 
             rset.next();
@@ -126,8 +149,29 @@ public class QueryList {
 
             pstmt.close();
             rset.close();
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+        }  
+        
+        return value;
+    }
+    
+    public static String getNameEntity(Connection conn, int cod_entity){
+        String value = "";
+        try{
+            String query = "SELECT entity_name FROM entity WHERE cod_entity = ?";
+
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, cod_entity);
+            rset = pstmt.executeQuery();
+
+            rset.next();
+            value = rset.getString(1);
+
+            pstmt.close();
+            rset.close();
+        }catch(SQLException ex){
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }  
         
         return value;

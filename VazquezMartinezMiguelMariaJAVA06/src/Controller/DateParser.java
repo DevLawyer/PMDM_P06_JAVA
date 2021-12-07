@@ -1,17 +1,15 @@
 package Controller;
 
 /**
- * 
- * @author Miguel Maria Vazquez Martinez
- * @author David Bernal Navarrete
- * 
- * This class is used to turn String objects to GregorianCalendar objects and vice versa.
- * It also has the tools required to check if a certain amount of time has passed
- * between two dates.
- */
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
 
+import Errors.ErrorsMsg;
+import Errors.ErrorsSaveLogs;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -23,7 +21,7 @@ public class DateParser {
 
     /*------------------------------------------------------------------------*/
     // Converts from a String to a GregorianCalendar.
-    public static GregorianCalendar parseDate(String date) {
+    public static GregorianCalendar parseDate(String date) throws ErrorsMsg {
         /** Strig parameter must have the following format: DD/MM/YYYY
          * We will use the following constructor from GregorianCalendar
          * GregorianCalendar(int year, int month, int day)
@@ -39,8 +37,9 @@ public class DateParser {
                     Integer.parseInt(date.substring(0, 4)),
                     Integer.parseInt(date.substring(5, 7)) - 1, // Calendar month is between 0 and 11
                     Integer.parseInt(date.substring(8)));
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException ex) {
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
+            throw new ErrorsMsg(1);
         }
 
         return cal;
@@ -63,9 +62,9 @@ public class DateParser {
         try {
             Date thisDate = cal.getTime();
             return sdf.format(thisDate);
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // If the date cannot be formatted:
-            System.out.println(e.getMessage());
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
             return null;
         }
     }
@@ -77,9 +76,9 @@ public class DateParser {
          */
         try {
             return sdf.format(cal);
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // If the date cannot be formatted:
-            System.out.println(e.getMessage());
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
             return null;
         }
     }

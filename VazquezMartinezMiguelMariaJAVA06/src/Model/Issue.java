@@ -1,28 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* 
+* @author Miguel Maria Vazquez Martinez
+* Sixth practice of module PMDM.
+* 
+*/
+
 package Model;
 
 import Controller.DateParser;
+import Errors.ErrorsMsg;
 import java.util.GregorianCalendar;
 
-/**
- *
- * @author migva
- */
-public class Issue {
-    private int cod_issue;
-    private String issue_description;
-    private GregorianCalendar entry_date;
-    private GregorianCalendar end_date;
-    private int hours_num;
-    private int cod_client;
-    private int cod_entity;
-    private float cost;
+public class Issue { 
     
-    public Issue(int cod_issue, String issue_description, String entry_date, String end_date, int hours_num, int cod_client, int cod_entity, float cost){
+    // CONSTRUCTOR METHODS /////////////////////////////////////////////////////
+    public Issue(int cod_issue, String issue_description, String entry_date, String end_date, int hours_num, int cod_client, int cod_entity, float cost) throws ErrorsMsg{
         setCodIssue(cod_issue);
         setIssueDescription(issue_description);
         setEntryDate(entry_date);
@@ -33,6 +25,8 @@ public class Issue {
         setCost(cost);
     }
     
+    
+    // GETTER METHODS //////////////////////////////////////////////////////////
     public int getCodIssue(){
         return cod_issue;
     }
@@ -65,6 +59,8 @@ public class Issue {
         return cost;
     }
     
+    
+    // SETTER METHODS //////////////////////////////////////////////////////////
     public void setCodIssue(int cod_issue){
         this.cod_issue = cod_issue;
     }
@@ -73,11 +69,11 @@ public class Issue {
         this.issue_description = issue_description;
     }
     
-    public void setEntryDate(String entry_date){
+    public void setEntryDate(String entry_date) throws ErrorsMsg{
         this.entry_date = DateParser.parseDate(entry_date);
     }
     
-    public void setEndDate(String end_date){
+    public void setEndDate(String end_date) throws ErrorsMsg{
         if(end_date == null){
             this.end_date = null;
         } else {
@@ -101,14 +97,27 @@ public class Issue {
         this.cost = cost;
     }
     
+    
+    
     public String toString(){
         return String.valueOf(cod_issue)+";"+
                 issue_description+";"+
                 DateParser.parseDate(entry_date)+";"+
-                ("1111-11-11".equals(DateParser.parseDate(end_date))? "Activo": DateParser.parseDate(end_date))+";"+
+                (end_date == null? "Activo": DateParser.parseDate(end_date))+";"+
                 String.valueOf(hours_num)+";"+
                 String.valueOf(cod_client)+";"+
                 String.valueOf(cod_entity)+";"+
                 String.valueOf(cost);
     }
+    
+    
+    // ATTRIBUTES //////////////////////////////////////////////////////////////
+    private int cod_issue;
+    private String issue_description;
+    private GregorianCalendar entry_date;
+    private GregorianCalendar end_date;
+    private int hours_num;
+    private int cod_client;
+    private int cod_entity;
+    private float cost;
 }

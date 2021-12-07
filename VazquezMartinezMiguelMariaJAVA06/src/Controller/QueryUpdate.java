@@ -7,15 +7,13 @@
 
 package Controller;
 
+import Errors.ErrorsSaveLogs;
 import Model.Issue;
 import Model.Lawyer;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.sql.PreparedStatement;
 
 public class QueryUpdate {
@@ -37,7 +35,7 @@ public class QueryUpdate {
             rset.close();
             stmt.close();
         } catch (SQLException ex) {
-            Logger.getLogger(QueryUserAccess.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }
     }
     
@@ -61,7 +59,7 @@ public class QueryUpdate {
             pstmt.executeUpdate();
             pstmt.close();
         } catch (SQLException ex) {
-            Logger.getLogger(QueryUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorsSaveLogs.saveLogError(ex.getMessage());
         }
 
     }
