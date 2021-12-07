@@ -115,3 +115,15 @@ java.net.ConnectException: Error al conectarse al servidor localhost en el puert
 Tue Dec 07 17:01:59 CET 2021
 java.net.ConnectException: Error al conectarse al servidor localhost en el puerto 1.527 con el mensaje Connection refused: connect.
 ----------------------------------------
+Tue Dec 07 17:15:46 CET 2021
+java.net.ConnectException: Error al conectarse al servidor localhost en el puerto 1.527 con el mensaje Connection refused: connect.
+----------------------------------------
+Tue Dec 07 17:23:49 CET 2021
+Error - El número de horas no es válido.
+----------------------------------------
+Tue Dec 07 17:23:54 CET 2021
+Error - El número de horas no es válido.
+----------------------------------------
+Tue Dec 07 17:23:58 CET 2021
+Error - La descripción es demasiado alrga
+----------------------------------------

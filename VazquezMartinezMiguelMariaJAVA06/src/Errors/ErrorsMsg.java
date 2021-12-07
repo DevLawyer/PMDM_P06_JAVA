@@ -81,7 +81,7 @@ public class ErrorsMsg extends Exception {
         /**
          * Shows an error message for when the description is longer than 50 characters.
          */
-        message = "Error - La descripción es demasiado alrga";
+        message = "Error - La descripción es demasiado larga";
     }
     
     public static final void invalidEndDateMessage(){
